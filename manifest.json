@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Time Limitter",
+  "version": "1.0.0",
+  "description": "Track and limit time spent on websites.",
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "idle",
+    "alarms"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "template/options.html",
+  "action": {
+    "default_popup": "template/popup.html",
+    "default_title": "Time Limitter"
+  },
+
+  "icons": {
+    "16": "media/clock.png",
+    "48": "media/clock.png",
+    "128": "media/clock.png"
+  }
+}

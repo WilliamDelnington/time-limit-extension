@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time Limitter — Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      color: #1a1a1a;
+      background: #f5f5f5;
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    h1 { font-size: 20px; font-weight: 600; }
+
+    .header-date { font-size: 13px; color: #888; margin-top: 3px; }
+
+    .header-nav a {
+      font-size: 12px;
+      color: #1565c0;
+      text-decoration: none;
+    }
+    .header-nav a:hover { text-decoration: underline; }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .card-title { font-size: 13px; font-weight: 600; color: #444; }
+    .card-meta  { font-size: 12px; color: #aaa; margin-top: 2px; }
+
+    /* ── Bar chart ── */
+    .chart { display: flex; flex-direction: column; gap: 11px; }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 160px 1fr 70px 70px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bar-label {
+      font-size: 13px;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bar-track {
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      max-width: 100%;
+      transition: width 0.4s ease;
+    }
+
+    .bar-fill.green  { background: #4caf50; }
+    .bar-fill.orange { background: #ff9800; }
+    .bar-fill.red    { background: #f44336; }
+    .bar-fill.blue   { background: #1565c0; }
+
+    /* vertical line marking the daily limit on the bar track */
+    .bar-limit-marker {
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      width: 2px;
+      background: rgba(0, 0, 0, 0.18);
+      border-radius: 1px;
+      pointer-events: none;
+    }
+
+    .bar-value {
+      font-size: 12px;
+      font-weight: 500;
+      color: #222;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .bar-aux {
+      font-size: 11px;
+      color: #aaa;
+      white-space: nowrap;
+    }
+
+    /* ── Week day indicator dots ── */
+    .week-context {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .week-days { display: flex; gap: 4px; }
+
+    .day-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      background: #f0f0f0;
+      color: #ccc;
+    }
+
+    .day-dot.has-data { background: #e3f2fd; color: #1565c0; }
+    .day-dot.today    { background: #1565c0; color: #fff; }
+
+    .week-range { font-size: 12px; color: #999; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      color: #bbb;
+      font-size: 13px;
+      padding: 28px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="page-header">
+      <div>
+        <h1>⏱ Dashboard</h1>
+        <div class="header-date" id="header-date"></div>
+      </div>
+      <div class="header-nav">
+        <a href="options.html">Manage limits →</a>
+      </div>
+    </div>
+
+    <!-- Today's usage -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Today's Usage</div>
+        <div class="card-meta" id="today-total"></div>
+      </div>
+      <div class="chart" id="today-chart">
+        <div class="empty-state">No activity recorded today.</div>
+      </div>
+    </div>
+
+    <!-- Weekly average -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Weekly Average</div>
+          <div class="week-context" id="week-context"></div>
+        </div>
+        <div class="card-meta" id="week-total"></div>
+      </div>
+      <div class="chart" id="week-chart">
+        <div class="empty-state">No data for this week yet.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../scripts/dashboard.js"></script>
+</body>
+</html>
